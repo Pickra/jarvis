@@ -42,7 +42,7 @@ const MODULE_TYPES = {
 };
 
 function _transformModules(modules = []) {
-  let table;
+  const table = { cjs: [], esm: [], mixed: [] };
 
   modules.forEach(module => {
     const { name, size, reasons } = module;
@@ -56,11 +56,11 @@ function _transformModules(modules = []) {
     const transformedModule = { name, size, transformedReasons };
 
     if (hasEsm && !hasCjs) {
-      table = { cjs: [], esm: [transformedModule], mixed: [] };
+      table.esm.push(transformedModule);
     } else if (hasEsm && hasCjs) {
-      table = { cjs: [], esm: [], mixed: [transformedModule] };
+      table.mixed.push(transformedModule);
     } else if (!hasEsm) {
-      table = { cjs: [transformedModule], esm: [], mixed: [] };
+      table.cjs.push(transformedModule);
     }
   });
 
